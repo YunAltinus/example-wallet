@@ -25,8 +25,8 @@ RUN composer install --optimize-autoloader --no-dev \
     && cp .fly/entrypoint.sh /entrypoint \
     && chmod +x /entrypoint \
     && chmod -R 777 /var/www/html/storage \
-    && chown www-data:www-data storage/oauth-*.key \
-    && chmod -R 777 /var/www/html/storage/oauth-*.key
+    && chmod -R 777 /var/www/html/storage/oauth-*.key \
+    && chown www-data:www-data /var/www/html/storage
 
 # If we're using Octane...
 RUN if grep -Fq "laravel/octane" /var/www/html/composer.json; then \
