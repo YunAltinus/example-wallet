@@ -65,12 +65,12 @@ const popupSubmit = async () => {
 <template>
     <Popup :loader="loader" @popup-close="popupClose" @popup-submit="popupSubmit">
         <template #header>
-            Cüzdan Oluştur
+            Create Wallet
         </template>
         <template #body>
             <div>
                 <InputTag :disabled="loader" :onKeyup="currencyValidation" :element="formData" field="currency"
-                    v-model="formData.currency" type="text" label="Para Birimi" required />
+                    v-model="formData.currency" type="text" label="Currency" required />
             </div>
         </template>
     </Popup>

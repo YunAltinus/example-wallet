@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Purse;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\HelperController;
 
-class AuthController extends Controller
+class AuthController extends HelperController
 {
     /**
      * @param \Illuminate\Http\Request $request
@@ -27,7 +28,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return sendError('Validation Error', 422, $validator->errors());
+            return $this->sendError('Validation Error', 422, $validator->errors());
         }
 
         $userData["password"] = Hash::make($userData['password']);
@@ -39,9 +40,9 @@ class AuthController extends Controller
 
             $purseModel->createPurse(["userId" => $user->id]);
 
-            return sendResponse($user, 201);
+            return $this->sendResponse($user, 201);
         } catch (\Exception $e) {
-            return sendError($e->getMessage());
+            return $this->sendError($e->getMessage());
         }
     }
 
@@ -59,11 +60,11 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return sendError('Validation Error', 422, $validator->errors());
+            return $this->sendError('Validation Error', 422, $validator->errors());
         }
 
         if (!Auth::attempt($userData)) {
-            return sendError("Email or password is incorrect");
+            return $this->sendError("Email or password is incorrect");
         }
 
         $user = Auth::user();
@@ -73,9 +74,8 @@ class AuthController extends Controller
             "accessToken" => $user->createToken("accessToken")->accessToken
         ];
 
-        return sendResponse($response);
+        return $this->sendResponse($response);
     }
-
 
     /**
      * @param \Illuminate\Http\Request $request
@@ -85,6 +85,6 @@ class AuthController extends Controller
     {
         $request->user()->token()->revoke();
 
-        return sendResponse(["message" => "Logout is successful"]);
+        return $this->sendResponse(["message" => "Logout is successful"]);
     }
 }

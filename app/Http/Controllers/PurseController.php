@@ -7,8 +7,9 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Purse;
 use App\Models\PurseHistory;
 use App\Services\ExchangeService;
+use App\Http\Controllers\HelperController;
 
-class PurseController extends Controller
+class PurseController extends HelperController
 {
     /**
      * @param \Illuminate\Http\Request $request
@@ -21,9 +22,9 @@ class PurseController extends Controller
 
             $purses = $purseModel->fetchPurses($request->user()->id);
 
-            return sendResponse($purses);
+            return $this->sendResponse($purses);
         } catch (\Exception $e) {
-            return sendError($e->getMessage(), $e->getCode());
+            return $this->sendError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -38,9 +39,9 @@ class PurseController extends Controller
 
             $purses = $purseHistoryModel->fetchPurseHistory($request->user()->id, $request->query());
 
-            return sendResponse($purses);
+            return $this->sendResponse($purses);
         } catch (\Exception $e) {
-            return sendError($e->getMessage(), $e->getCode());
+            return $this->sendError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -59,7 +60,7 @@ class PurseController extends Controller
         if ($validator->fails()) {
             $errors = $validator->errors()->toArray();
 
-            return sendError($errors["currency"][0], 422);
+            return $this->sendError($errors["currency"][0], 422);
         }
 
         try {
@@ -72,9 +73,9 @@ class PurseController extends Controller
 
             $wallet["totalAmount"] = "0.0000";
 
-            return sendResponse($wallet);
+            return $this->sendResponse($wallet);
         } catch (\Exception $e) {
-            return sendError($e->getMessage(), $e->getCode());
+            return $this->sendError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -93,16 +94,16 @@ class PurseController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return sendError('Validation Error', 422, $validator->errors());
+            return $this->sendError('Validation Error', 422, $validator->errors());
         }
 
         try {
             $purseModel = new Purse;
 
             $wallet = $purseModel->updatePurse($amountData, $request->user()->id);
-            return sendResponse($wallet);
+            return $this->sendResponse($wallet);
         } catch (\Exception $e) {
-            return sendError($e->getMessage(), $e->getCode());
+            return $this->sendError($e->getMessage(), $e->getCode());
         }
     }
 
@@ -142,9 +143,9 @@ class PurseController extends Controller
             $fromWallet = $purseModel->updatePurse($fromWalletData, $request->user()->id);
             $toWallet = $purseModel->updatePurse($toWalletData, $request->user()->id);
 
-            return sendResponse(["fromWallet" => $fromWallet, "toWallet" => $toWallet]);
+            return $this->sendResponse(["fromWallet" => $fromWallet, "toWallet" => $toWallet]);
         } catch (\Exception $e) {
-            return sendError($e->getMessage(), $e->getCode());
+            return $this->sendError($e->getMessage(), $e->getCode());
         }
     }
 }
