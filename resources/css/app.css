@@ -1,0 +1,106 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global CSS */
+
+html,
+body {
+  @apply font-poppins;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  @apply font-bold;
+}
+
+h1 {
+  @apply text-4xl font-bold;
+}
+
+h2 {
+  @apply text-2xl font-bold;
+}
+
+h3 {
+  @apply text-xl font-bold;
+}
+
+h4 {
+  @apply text-lg font-extrabold;
+}
+
+h5 {
+  @apply text-sm font-extrabold;
+}
+
+/* forms */
+.theme-label {
+  @apply text-sm font-bold mb-2;
+}
+
+.theme-input {
+  @apply border-2 border-slate-200 py-4 px-3 rounded-[4px] focus:border-theme-main outline-none text-sm;
+}
+
+.theme-input-error {
+  @apply border-2 border-red-500 py-4 px-3 rounded-[4px]  outline-none text-sm;
+}
+
+.hover-effect {
+  @apply transition duration-300;
+}
+
+.theme-button {
+  @apply py-1.5 px-4 rounded-md font-bold text-sm hover-effect;
+}
+
+.theme-button.main {
+  @apply bg-theme-main text-white;
+}
+
+.theme-button.main:hover {
+  @apply bg-hover-theme-main;
+}
+
+/* Response message */
+.response-message-wrapper{
+    @apply flex flex-col gap-4 fixed right-0 top-24;
+}
+.response-message {
+  @apply  pl-2 pr-6 py-2 bg-white border-l-4  drop-shadow-md flex items-center gap-2 min-w-[310px] w-fit;
+}
+
+.response-message .icon-box {
+  @apply w-10 h-10 rounded-full flex items-center justify-center;
+}
+
+.response-error {
+  @apply border-l-4 border-l-red-500;
+}
+
+.response-message .icon-box.error {
+  @apply bg-red-500;
+}
+
+.response-success {
+  @apply border-l-4 border-l-green-500;
+}
+
+.response-message .icon-box.success {
+  @apply bg-green-500;
+}
+
+/*.router-link-active{
+    @apply text-theme-main border-b-theme-primary border-b-2;
+}*/
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

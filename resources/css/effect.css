@@ -1,0 +1,24 @@
+.response-move {
+    transition: all 0.5s linear;
+  }
+  
+  .response-enter-active,
+  .response-leave-active {
+    transition: all 0.5s cubic-bezier(0.49, 1.66, 0.55, 0.84);
+  }
+  
+  .response-enter-from,
+  .response-leave-to {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+  
+  .response-enter-from,
+  .response-leave-to {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  
+  .response-leave-active {
+    position: absolute;
+  }
