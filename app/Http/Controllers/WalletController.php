@@ -138,26 +138,28 @@ class WalletController extends HelperController
             $wallets = $walletModel->fetchWallets($request->user()->id);
 
             $isFirst = true;
+
             foreach ($wallets as $wallet) {
                 $exchangeData = $exchangeService->fetchCurrencyByExchange($wallet->currency);
 
                 $result = $walletExchangeModel->updateWalletExchange($exchangeData, $request->user()->id, $wallet->amount, $isFirst);
+                
+                if ($result) {
+                    $walletHistory = new WalletHistory;
+    
+                    $walletHistory->addAmountToHistoryOfWallet([
+                        "userId" => $request->user()->id,
+                        "walletId" => $wallet->id,
+                        ...$amountData
+                    ]);
+                }
 
                 $isFirst = false;
             }
 
-            if ($result) {
-                $WalletHistory = new WalletHistory;
-
-                $WalletHistory->addAmountToHistoryOfWallet([
-                    "userId" => $request->user()->id,
-                    "walletId" => $amountData["walletId"],
-                    ...$amountData
-                ]);
-            }
-
-            return $this->sendResponse($wallet);
+            return $this->sendResponse($wallets);
         } catch (\Exception $e) {
+            dd($e);
             return $this->sendError($e->getMessage(), $e->getCode());
         }
     }

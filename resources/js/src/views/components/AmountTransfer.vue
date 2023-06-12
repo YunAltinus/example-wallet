@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, defineEmits } from 'vue';
+import { reactive, ref } from 'vue';
 import errorManager from '@/lib/validatons.js'
 import axios from '@/plugins/app-axios.js'
 import box from "@/store/box.js";
@@ -8,7 +8,8 @@ import { transferType, supportedCodes } from '@/lib/enums.js'
 const { required } = errorManager()
 
 const props = defineProps({
-    walletList: { type: Array, required: false, default: [] }
+    walletList: { type: Array, required: false, default: [] },
+    getWalletExchange: { type: Function }
 })
 
 const formData = reactive({
@@ -43,6 +44,10 @@ const popupClose = () => {
     emit("popupClose");
 };
 
+const responseWallatListEach = (newWalletList) => {
+    emit('changeData', newWalletList)
+}
+
 const popupSubmit = async () => {
     formData.dirty = true
 
@@ -63,9 +68,7 @@ const popupSubmit = async () => {
             if (wallet["currency"] == formData.toCurrency) formData["toWalletId"] = wallet.id
         })
     }
-    const responseWallatListEach = (newWalletList) => {
-        emit('changeData', newWalletList)
-    }
+
 
     wallatListEach()
 
@@ -83,6 +86,7 @@ const popupSubmit = async () => {
         box.addSuccess('Success', `Wallet creation successful`)
 
         responseWallatListEach(data)
+        props.getWalletExchange()
         popupClose()
     } catch (error) {
         console.log(error)

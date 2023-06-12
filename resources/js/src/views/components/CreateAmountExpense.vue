@@ -9,18 +9,20 @@ import { transactionType, supportedCodes } from '@/lib/enums.js'
 const { required } = errorManager()
 
 const props = defineProps({
-    wallet: { type: Object, required: false, default: {} }
+    wallet: { type: Object, required: false, default: {} },
+    getWalletExchange: { type: Function }
 })
 
 const formData = reactive({
     amount: '',
+    currrency: '',
     dirty: false,
     error: {}
 })
 
 const loader = ref(false)
 
-const emit = defineEmits(["popupClose"]);
+const emit = defineEmits(["popupClose", 'changeData']);
 
 const amountValidation = () => {
     if (!formData.dirty) return
@@ -35,6 +37,10 @@ const currencyValidation = () => {
 const popupClose = () => {
     emit("popupClose");
 };
+
+const responseWallatListEach = (newWalletList) => {
+    emit('changeData', newWalletList)
+}
 
 const popupSubmit = async () => {
     formData.dirty = true
@@ -60,7 +66,8 @@ const popupSubmit = async () => {
     try {
         const { data } = await axios.post("/api/addAmountToWallet", copyData)
         box.addSuccess('Success', `Add expense successful`)
-        Object.assign(props.wallet, data)
+        responseWallatListEach(data)
+        props.getWalletExchange()
         popupClose()
     } catch (error) {
         box.addError('Error', `${error.response?.data.message}`)

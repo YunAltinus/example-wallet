@@ -67,10 +67,12 @@ onMounted(() => {
 
 <template>
     <CreateWallet v-if="createWalletPopup" :walletList="walletList" @popupClose="createWalletPopup = !createWalletPopup" />
-    <CreateAmount v-if="createAmountPopup" :wallet="activeWallet" @popupClose="createAmountPopup = !createAmountPopup" />
-    <CreateAmountExpense v-if="createAmountExpense" :wallet="activeWallet"
+    
+    <CreateAmount :getWalletExchange="getWalletExchange" @changeData="changeWalletList" v-if="createAmountPopup" :wallet="activeWallet" @popupClose="createAmountPopup = !createAmountPopup" />
+    
+    <CreateAmountExpense :getWalletExchange="getWalletExchange" @changeData="changeWalletList" v-if="createAmountExpense" :wallet="activeWallet"
         @popupClose="createAmountExpense = !createAmountExpense" />
-    <AmountTransfer @changeData="changeWalletList" v-if="amountTransfer" :walletList="walletList"
+    <AmountTransfer :getWalletExchange="getWalletExchange" @changeData="changeWalletList" v-if="amountTransfer" :walletList="walletList"
         @popupClose="amountTransfer = !amountTransfer" />
 
     <div class="flex flex-col gap-5">
