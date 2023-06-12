@@ -1,10 +1,9 @@
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, defineEmits } from 'vue';
 import errorManager from '@/lib/validatons.js'
 import axios from '@/plugins/app-axios.js'
 import box from "@/store/box.js";
-import { transferType } from '@/lib/enums.js'
-
+import { transferType, supportedCodes } from '@/lib/enums.js'
 
 const { required } = errorManager()
 
@@ -23,7 +22,7 @@ const formData = reactive({
 
 const loader = ref(false)
 
-const emit = defineEmits(["popupClose"]);
+const emit = defineEmits(["popupClose", 'changeData']);
 
 const fromCurrencyValidation = () => {
     if (!formData.dirty) return
@@ -39,7 +38,6 @@ const amountValidation = () => {
     if (!formData.dirty) return
     required(formData, 'amount')
 }
-
 
 const popupClose = () => {
     emit("popupClose");
@@ -65,11 +63,8 @@ const popupSubmit = async () => {
             if (wallet["currency"] == formData.toCurrency) formData["toWalletId"] = wallet.id
         })
     }
-    const responseWallatListEach = (data) => {
-        props.walletList.forEach((wallet) => {
-            if (wallet["currency"] == data.fromWallet.currency) wallet.totalAmount = data.fromWallet.totalAmount
-            if (wallet["currency"] == data.toWallet.currency) wallet.totalAmount = data.toWallet.totalAmount
-        })
+    const responseWallatListEach = (newWalletList) => {
+        emit('changeData', newWalletList)
     }
 
     wallatListEach()
@@ -78,19 +73,19 @@ const popupSubmit = async () => {
         amount: formData.amount,
         fromWalletId: formData.fromWalletId,
         toWalletId: formData.toWalletId,
-        toCurrency: formData.toCurrency,
         fromCurrency: formData.fromCurrency,
-        toWalletId: formData.toWalletId,
+        toCurrency: formData.toCurrency,
         transfer: transferType.TRANSFER
     }
 
     try {
-        const { data } = await axios.post("/api/exchangePurseToPurse", copyData)
+        const { data } = await axios.post("/api/exchangeWalletToWallet", copyData)
         box.addSuccess('Success', `Wallet creation successful`)
 
         responseWallatListEach(data)
         popupClose()
     } catch (error) {
+        console.log(error)
         box.addError('Error', `${error.response?.data.message}`)
     }
     finally {
@@ -113,8 +108,7 @@ const popupSubmit = async () => {
                         field="fromCurrency" :onKeyup="fromCurrencyValidation" required :disabled="loader" />
                 </div>
                 <div>
-                    <InputSelect :items="walletList.filter((wallet) => wallet.currency != formData.fromCurrency)"
-                        itemKey="currency" itemValue="currency" label="Select a Transaction Wallet"
+                    <InputSelect :items="supportedCodes" label="Select a Transaction Wallet"
                         defaultOptions="Please select a wallet" v-model="formData.toCurrency" :element="formData"
                         :onKeyup="toCurrencyValidation" field="toCurrency" required :disabled="loader" />
                 </div>

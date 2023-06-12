@@ -28,10 +28,11 @@ const getAllTransaction = async () => {
     loader.value = true
 
     try {
-        const { data } = await axios.get("/api/fetchPurseHistory", { params: query })
+        const { data } = await axios.get("/api/fetchWalletHistory", { params: query })
         transactionList.value = data
         // popupClose()
     } catch (error) {
+        console.log(error)
     }
     finally {
         loader.value = false
@@ -47,11 +48,12 @@ onMounted(() => {
     <div class="w-full">
         <div class="flex justify-between">
 
-            <h3>Cüzdan İşlemleri</h3>
+            <h3>Wallet transactions</h3>
             <div class="flex gap-2">
                 <div>
-                    <label for="transfer"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an transfer option</label>
+                    <label for="transfer" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Select an transfer option
+                    </label>
                     <select @change="changeSelectBox" v-model="transferType" id="transfer"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option selected value="">All</option>
@@ -60,8 +62,9 @@ onMounted(() => {
                     </select>
                 </div>
                 <div>
-                    <label for="transaction" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an
-                        transaction option</label>
+                    <label for="transaction" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Select an transaction option
+                    </label>
                     <select @change="changeSelectBox" v-model="transactionType" id="transaction"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         <option selected value="">All</option>

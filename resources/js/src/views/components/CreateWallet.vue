@@ -3,6 +3,7 @@ import { reactive, ref } from 'vue';
 import errorManager from '@/lib/validatons.js'
 import axios from '@/plugins/app-axios.js'
 import box from "@/store/box.js";
+import { supportedCodes } from "@/lib/enums.js";
 
 
 const { required } = errorManager()
@@ -17,6 +18,15 @@ const formData = reactive({
     error: {}
 })
 
+const currencies = ref([])
+const filterCodes = ref([])
+
+props.walletList.forEach(wallet => currencies.value.push(wallet.currency))
+
+filterCodes.value = supportedCodes.filter((code) => {
+    if (currencies.value.indexOf(code[0]) == -1) return code
+})
+
 const loader = ref(false)
 
 const emit = defineEmits(["popupClose"]);
@@ -25,7 +35,6 @@ const currencyValidation = () => {
     if (!formData.dirty) return
     required(formData, 'currency')
 }
-
 
 const popupClose = () => {
     emit("popupClose");
@@ -49,7 +58,7 @@ const popupSubmit = async () => {
 
     // İstek Atıcaz
     try {
-        const { data } = await axios.post("/api/createPurse", copyData)
+        const { data } = await axios.post("/api/createWallet", copyData)
         box.addSuccess('Success', `Add expense successful`)
         props.walletList.push(data)
         popupClose()
@@ -62,6 +71,7 @@ const popupSubmit = async () => {
 }
 
 </script>
+
 <template>
     <Popup :loader="loader" @popup-close="popupClose" @popup-submit="popupSubmit">
         <template #header>
@@ -69,10 +79,10 @@ const popupSubmit = async () => {
         </template>
         <template #body>
             <div>
-                <InputTag :disabled="loader" :onKeyup="currencyValidation" :element="formData" field="currency"
-                    v-model="formData.currency" type="text" label="Currency" required />
+                <InputSelect :items="filterCodes" itemKey="0" itemValue="1" label="Currency"
+                    defaultOptions="Please select a currency" v-model="formData.currency" :element="formData"
+                    field="currency" :onKeyup="currencyValidation" required :disabled="loader" />
             </div>
         </template>
     </Popup>
-
 </template>

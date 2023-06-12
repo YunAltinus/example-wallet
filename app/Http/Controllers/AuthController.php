@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use App\Models\Purse;
+use App\Models\Wallet;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\HelperController;
+use App\Models\WalletExchange;
+use App\Services\ExchangeService;
 
 class AuthController extends HelperController
 {
@@ -36,9 +38,20 @@ class AuthController extends HelperController
         try {
             $user = User::create($userData);
 
-            $purseModel = new Purse;
+            $exchangeService = new ExchangeService;
 
-            $purseModel->createPurse(["userId" => $user->id]);
+            $walletModel = new Wallet;
+
+            $walletModel->createWallet(["userId" => $user->id]);
+
+            $supportedCodesData = $exchangeService->fetchSupportedCodes();
+
+            $walletExchangeModel = new WalletExchange;
+
+            $walletExchangeModel->createSupportedCodes(
+                $user->id,
+                $supportedCodesData['supported_codes']
+            );
 
             return $this->sendResponse($user, 201);
         } catch (\Exception $e) {

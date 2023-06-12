@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PurseHistory extends Model
+class WalletHistory extends Model
 {
     use HasFactory;
 
@@ -20,15 +20,15 @@ class PurseHistory extends Model
         'currency',
         'transfer',
         'transaction',
-        'amount',
+        'amount'
     ];
 
     /**
      * @param integer $purseId
      * @param array $queryData
-     * @return App\Models\Purse
+     * @return App\Models\Wallet
      */
-    public function fetchPurseHistory($userId, $queryData)
+    public function fetchWalletHistory($userId, $queryData)
     {
         if (!empty($queryData)) {
             return self::where("userId", $userId)->where(function ($query) use ($queryData) {
@@ -43,9 +43,9 @@ class PurseHistory extends Model
 
     /**
      * @param array $amount
-     * @return App\Models\PurseHistory
+     * @return App\Models\WalletHistory
      */
-    public function addAmountToHistoryOfPurse($amount)
+    public function addAmountToHistoryOfWallet($amount)
     {
         return self::create($amount);
     }

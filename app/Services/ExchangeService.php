@@ -39,4 +39,11 @@ class ExchangeService
 
         return json_decode($res->getBody()->getContents(), true);
     }
+
+    public function fetchSupportedCodes()
+    {
+        $res = $this->client->get("{$this->baseUri}/codes");
+
+        return json_decode($res->getBody()->getContents(), true);
+    }
 }

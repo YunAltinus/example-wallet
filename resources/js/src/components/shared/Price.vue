@@ -1,23 +1,18 @@
-<template>
-    <span id="price" class="text-md">
-        {{ financial(amount) }} {{ currency }}
-    </span>
-</template>
 <script setup>
+const props = defineProps({
+    walletList: {
+        type: Array,
+        defaulf: []
+    }
+})
+
 const financial = (number) => {
     if (number) return `${Number.parseFloat(number).toFixed(2)}`;
 }
-
-const props = defineProps({
-    amount: {
-        type: String,
-        default: 0,
-        required: false
-    },
-    currency: {
-        type: String,
-        default: 0,
-        required: false,
-    }
-})
 </script>
+
+<template>
+    <span v-for="(wallet, index) in walletList" :key="index" class="text-md">
+        ≈ <strong> {{ financial(wallet.amount) }} {{ wallet.currency }}</strong> <br>
+    </span>
+</template>

@@ -3,7 +3,7 @@ import { reactive, ref } from 'vue';
 import errorManager from '@/lib/validatons.js'
 import axios from '@/plugins/app-axios.js'
 import box from "@/store/box.js";
-import {transactionType} from '@/lib/enums.js'
+import { transactionType, supportedCodes } from '@/lib/enums.js'
 
 
 const { required } = errorManager()
@@ -27,6 +27,10 @@ const amountValidation = () => {
     required(formData, 'amount')
 }
 
+const currencyValidation = () => {
+    if (!formData.dirty) return
+    required(formData, 'currency')
+}
 
 const popupClose = () => {
     emit("popupClose");
@@ -36,6 +40,7 @@ const popupSubmit = async () => {
     formData.dirty = true
 
     amountValidation()
+    currencyValidation()
 
     if (Object.keys(formData.error).length > 0) {
         box.addError("Error", "Please fill out the form completely");
@@ -46,13 +51,14 @@ const popupSubmit = async () => {
 
     const copyData = {
         amount: formData.amount,
+        currency: formData.currency,
         walletId: props.wallet.id,
         transaction: transactionType.MONEY_OUT
     }
 
     // İstek Atıcaz
     try {
-        const { data } = await axios.post("/api/addAmountToPurse", copyData)
+        const { data } = await axios.post("/api/addAmountToWallet", copyData)
         box.addSuccess('Success', `Add expense successful`)
         Object.assign(props.wallet, data)
         popupClose()
@@ -68,16 +74,16 @@ const popupSubmit = async () => {
 <template>
     <Popup :loader="loader" @popup-close="popupClose" @popup-submit="popupSubmit">
         <template #header>
-            Gider Oluştur
+            Create an Expense
         </template>
         <template #body>
-            <div class="flex flex-col gap-2 bg-slate-300 p-2 mb-3">
-                <h5>Aktif Hesap</h5>
-                <Wallet :wallet="wallet" />
-            </div>
             <div>
                 <InputTag :disabled="loader" :onKeyup="amountValidation" :element="formData" field="amount"
-                    v-model="formData.amount" type="number" label="Oluşturulcak Tutar" required />
+                    v-model="formData.amount" type="number" label="Enter the amount" required />
+
+                <InputSelect :items="supportedCodes" itemKey="0" itemValue="1" label="Currency"
+                    defaultOptions="Please select a currency" v-model="formData.currency" :element="formData"
+                    field="currency" :onKeyup="currencyValidation" required :disabled="loader" />
             </div>
         </template>
     </Popup>

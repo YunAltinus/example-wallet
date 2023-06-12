@@ -2,15 +2,16 @@
 export default {
     data() {
         return {
-            purses: []
+            wallets: []
         }
     },
     async mounted() {
         try {
-            const { data } = await this.$axios.get("/api/fetchPursesOfUser")
+            // const { data } = await this.$axios.get("/api/fetchWalletsOfUser")
 
-            this.purses = data
+            this.wallets = data
         } catch (error) {
+            console.log(error)
         }
     }
 }
@@ -33,16 +34,16 @@ export default {
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(purse, index) in purses" :key="index" class="border-b border-gray-200 dark:border-gray-700">
+                <tr v-for="(Wallet, index) in wallets" :key="index" class="border-b border-gray-200 dark:border-gray-700">
                     <th scope="row"
                         class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
-                        {{ purse.currency }}
+                        {{ Wallet.currency }}
                     </th>
                     <td class="px-6 py-4">
-                        {{ purse.totalAmount }}
+                        {{ Wallet.totalAmount }}
                     </td>
                     <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
-                        {{ $dayjs(purse.updated_at) }}
+                        {{ $dayjs(Wallet.updated_at) }}
                     </td>
                 </tr>
             </tbody>

@@ -1,8 +1,10 @@
 <?php
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExchangeController;
-use App\Http\Controllers\PurseController;
+use App\Http\Controllers\WalletController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,13 +20,13 @@ use App\Http\Controllers\PurseController;
 Route::middleware('auth:api')->group(function () {
     // Route::apiResource("exchange", ExchangeController::class);
 
-    Route::get("/fetchPurseHistory", [PurseController::class, "fetchPurseHistory"]);
-    Route::get("/fetchPurseHistory", [PurseController::class, "fetchPurseHistory"]);
-    Route::get("/fetchPursesOfUser", [PurseController::class, "fetchPursesOfUser"]);
-    Route::post("/createPurse", [PurseController::class, "createPurse"]);
-    Route::post("/addAmountToPurse", [PurseController::class, "addAmountToPurse"]);
-    Route::post("/exchangePurseToPurse", [PurseController::class, "exchangePurseToPurse"]);
-    // Route::patch("/changeCurrencyWherePurse", [PurseController::class, "changeCurrencyWherePurse"]);
+    Route::get("/fetchWalletExchange", [WalletController::class, "fetchWalletExchange"]);
+    Route::get("/fetchWalletHistory", [WalletController::class, "fetchWalletHistory"]);
+    Route::get("/fetchWalletsOfUser", [WalletController::class, "fetchWalletsOfUser"]);
+    Route::post("/createWallet", [WalletController::class, "createWallet"]);
+    Route::post("/addAmountToWallet", [WalletController::class, "addAmountToWallet"]);
+    Route::post("/exchangeWalletToWallet", [WalletController::class, "exchangeWalletToWallet"]);
+    // Route::patch("/changeCurrencyWherePurse", [WalletController::class, "changeCurrencyWherePurse"]);
 
     Route::post("/logout", [AuthController::class, "logout"]);
 });

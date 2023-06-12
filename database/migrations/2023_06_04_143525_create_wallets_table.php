@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('purses', function (Blueprint $table) {
+        Schema::create('wallets', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('userId')->unsigned();
-            $table->string("currency")->default("TRY");
-            $table->decimal("totalAmount", 19, 4)->default(0.00);
+            $table->string("currency")->default('TRY');
+            $table->decimal("amount", 19, 4)->default(0.0000);
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('purses');
+        Schema::dropIfExists('wallets');
     }
 };

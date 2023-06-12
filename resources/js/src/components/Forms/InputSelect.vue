@@ -13,10 +13,8 @@ const props = defineProps({
     required: false,
   },
   itemKey: {
-    default: "key",
   },
   itemValue: {
-    default: "value",
   },
   defaultOptions: {
     default: "Lütfen bir değer seçiniz",
@@ -43,38 +41,28 @@ const props = defineProps({
   },
 });
 </script>
+
 <template>
   <div class="w-full flex flex-col">
     <label class="theme-label">
       {{ label }}
       <span v-if="required" class="required text-red-500 text-sm">*</span>
     </label>
-    <select
-      @change="onKeyup"
-      :class="
-        element && element.error && element.error[field]
-          ? 'theme-input-error'
-          : 'theme-input'
-      "
-      :value="modelValue"
-      :disabled="disabled"
-      @input="(e) => $emit('update:modelValue', e.target.value)"
-    >
+
+    <select @change="onKeyup" :class="element && element.error && element.error[field]
+      ? 'theme-input-error'
+      : 'theme-input'
+      " :value="modelValue" :disabled="disabled" @input="(e) => $emit('update:modelValue', e.target.value)">
+
       <option value="" selected="selected" disabled="disabled" hidden="hidden">
         {{ defaultOptions }}
       </option>
-      <option
-        v-for="(item, index) in items"
-        :key="index"
-        :value="item[itemKey]"
-      >
-        {{ item[itemValue] }}
+      <option v-for="(item, index) in items" :key="index" :value="itemKey ? item[itemKey] : item[0]">
+        {{ itemValue ? item[itemValue] : item[1] }}
       </option>
     </select>
-    <span
-      v-if="element && element.error && element.error[field]"
-      class="error-message text-red-500 mt-2 pl-1 text-sm"
-    >
+
+    <span v-if="element && element.error && element.error[field]" class="error-message text-red-500 mt-2 pl-1 text-sm">
       {{ element.error[field] }}
     </span>
   </div>

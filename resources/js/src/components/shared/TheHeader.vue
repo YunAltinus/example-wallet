@@ -20,6 +20,7 @@ const logout = async () => {
         box.addSuccess('Success', `Logout is successfully`)
         router.push({ name: "login" })
     } catch (error) {
+        console.log(error.response?.data.message)
         box.addError('Error', `${error.response?.data.message}`)
 
     } finally {

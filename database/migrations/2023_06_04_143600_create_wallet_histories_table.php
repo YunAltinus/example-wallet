@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('purse_histories', function (Blueprint $table) {
+        Schema::create('wallet_histories', function (Blueprint $table) {
             $table->id();
+            // $table->foreignId('userId')->constrained("users")->onDelete('cascade');
+            // $table->foreignId('walletId')->constrained("wallets")->onDelete('cascade');
             $table->bigInteger('userId')->unsigned();
             $table->bigInteger('walletId')->unsigned();
             $table->string("currency");
@@ -26,7 +28,7 @@ return new class extends Migration
 
     /**
      * @param integer $userId
-     * @return App\Models\PurseHistory
+     * @return App\Models\WalletHistory
      */
     public function fetchWalletHistory($userId)
     {
@@ -37,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('purse_histories');
+        Schema::dropIfExists('wallet_histories');
     }
 };
